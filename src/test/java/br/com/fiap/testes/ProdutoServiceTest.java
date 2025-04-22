@@ -13,8 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
@@ -49,5 +48,18 @@ public class ProdutoServiceTest {
         assertEquals(produtoExistente.getPreco(), resultado.get().getPreco());
 
         verify(produtoRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    @DisplayName("Deve retornar Optional vazio quando o ID não existir.")
+    void buscarPorId_QuandoIdNaoExistir_DeveRetornarOptionalVazio(){
+
+        when(produtoRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        Optional<Produto> resultado = produtoService.buscarPorId(99L);
+
+        assertFalse(resultado.isPresent(),"O Optional deveria estar vazio");
+
+        verify(produtoRepository).findById(99L);
     }
 }
